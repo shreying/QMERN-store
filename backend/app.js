@@ -1,12 +1,16 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 require("dotenv").config();
 require("./conn/conn.js");
+const user = require("./routes/user.js");
 
 
-const mongoose = require("mongoose");
 
-//
+//routes
+app.use("/api/v1", user);
+
+
 app.get("/", (req, res) => {
   res.send("Hello from the backend!");
 });
