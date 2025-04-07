@@ -4,7 +4,11 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AllBooks from './pages/AllBooks';
-import Login from './pages/Login';
+import LogIn from './pages/LogIn';
+import SignUp from './pages/SignUp'; // Import SignUp
+import Cart from './pages/Cart'; // Import Cart
+import Profile from './pages/Profile'; // Import Profile
+
 const App = () => {
   return (
     <div>
@@ -17,13 +21,11 @@ const App = () => {
           <Route path="/Profile" element={<Profile />} />
           <Route path="/SignUp" element={<SignUp />} />
           <Route path="/LogIn" element={<LogIn />} />
-          
         </Routes>
         <Footer />
       </Router>
-    
     </div>
-  )
-}
+  );
+};
 
 export default App
