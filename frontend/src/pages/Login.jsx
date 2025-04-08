@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [values, setValues] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -16,10 +16,10 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
-    const { email, password } = values;
+    const { username, password } = values;
 
-    if (!email || !password) {
-      return alert("Please fill in both email and password.");
+    if (!username || !password) {
+      return alert("Please fill in both username and password.");
     }
 
     try {
@@ -27,7 +27,8 @@ const Login = () => {
         "http://localhost:1000/api/v1/sign-in",
         values
       );
-      alert(response.data.message);
+      console.log(response.data);
+      // navigate("/dashboard");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed. Please try again.");
     }
@@ -40,7 +41,7 @@ const Login = () => {
           Log In to Your Account
         </h2>
 
-        {["email", "password"].map((field, idx) => (
+        {["username", "password"].map((field, idx) => (
           <div className="mb-5" key={idx}>
             <label
               htmlFor={field}
@@ -49,10 +50,14 @@ const Login = () => {
               {field}
             </label>
             <input
-              type={field === "email" ? "email" : "password"}
+              type={field === "password" ? "password" : "text"}
               id={field}
               name={field}
-              placeholder={field === "email" ? "you@example.com" : "Enter your password"}
+              placeholder={
+                field === "username"
+                  ? "Enter your username"
+                  : "Enter your password"
+              }
               value={values[field]}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg bg-zinc-900 text-zinc-100 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"

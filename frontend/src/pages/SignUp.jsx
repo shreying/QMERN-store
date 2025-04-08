@@ -63,6 +63,7 @@ const SignUp = () => {
               }
               value={values[field]}
               onChange={handleChange}
+              required={field === "username" || field === "email"} // Add required for username and email
               className="w-full px-4 py-3 rounded-lg bg-zinc-900 text-zinc-100 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
             />
           </div>
