@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGripLines } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace Redux with local state
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); // Get isLoggedIn from Redux
   const [MobileNav, setMobileNav] = useState("hidden");
 
   // Define navigation links
   const links = [
     { title: "Home", link: "/" },
     { title: "All Books", link: "/all-books" },
-    ...(isLoggedIn ? [
-      { title: "Cart", link: "/cart" },
-      { title: "Profile", link: "/profile" },
-    ] : []),
+    { title: "Cart", link: "/cart" },
+    { title: "Profile", link: "/profile" },
   ];
+
+  // Remove "Cart" and "Profile" links if not logged in
+  if (!isLoggedIn) {
+    links.splice(2, 2); // Remove 2 items starting from index 2
+  }
 
   // Toggle mobile nav visibility
   const toggleMobileNav = () => {
@@ -33,11 +37,7 @@ const Navbar = () => {
             <div className="flex items-center" key={i}>
               <Link
                 to={item.link}
-                className={
-                  item.title === "Profile"
-                    ? "px-4 py-1 border border-blue-500 rounded hover:bg-white hover:text-zinc-800 transition-all duration-300"
-                    : "hover:text-blue-700 transition-all duration-300"
-                }
+                className="hover:text-blue-700 transition-all duration-300"
               >
                 {item.title}
               </Link>
