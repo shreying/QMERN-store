@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const BookCard = ({ data }) => {
   console.log(data);
   return (
-    <Link to={`/book/${data._id}`}>
+    <Link to={`/view-book-details/${data._id}`}>
       <div className="bg-zinc-800 rounded p-4 hover:shadow-lg transition-shadow duration-300">
         <div className="bg-zinc-900 rounded overflow-hidden mb-4">
           <img
