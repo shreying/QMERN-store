@@ -37,7 +37,9 @@ const Navbar = () => {
             <div className="flex items-center" key={i}>
               <Link
                 to={item.link}
-                className="hover:text-blue-700 transition-all duration-300"
+                className={`hover:text-blue-700 transition-all duration-300 ${
+                  item.title === "Profile" ? "hover:bg-white hover:text-zinc-800 hover:rounded-lg px-2 py-1" : ""
+                }`}
               >
                 {item.title}
               </Link>

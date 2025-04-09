@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import { authActions } from "../store/auth";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
   const [values, setValues] = useState({
     username: "",
     password: "",
   });
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -27,7 +32,12 @@ const Login = () => {
         "http://localhost:1000/api/v1/sign-in",
         values
       );
-      console.log(response.data);
+      dispatch(authActions.login(response.data.token));
+      dispatch(authActions.changeRole(response.data.role));
+      localStorage.setItem("id", response.data.id);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("role", response.data.role);
+      navigate("/profile");
       // navigate("/dashboard");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed. Please try again.");
