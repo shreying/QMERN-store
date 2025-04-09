@@ -32,7 +32,7 @@ const Sidebar = ({ data }) => {
         </Link>
       </div>
       <button
-        className="bg-zinc-900 w-3/6 lg:w-full mt-4 lg:mt-0 text-white font-semibold flex items-center justify-center py-2 rounded transition-all hover:bg-white hover:text-zinc-900 hover:shadow-lg"
+        className="bg-zinc-900 w-3/6 lg:w-full mt-4 lg:mt-0 text-white font-semibold flex items-center justify-center py-2 rounded hover:bg-white hover:text-zinc-900 transition-all duration-300"
         onClick={() => {
           localStorage.clear(); // Clear user data
           window.location.href = "/login"; // Redirect to login page
