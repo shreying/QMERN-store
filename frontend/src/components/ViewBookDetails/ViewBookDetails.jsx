@@ -3,8 +3,7 @@ import axios from "axios";
 import Loader from "../Loader/Loader";
 import { useParams } from "react-router-dom";
 import { GrLanguage } from "react-icons/gr";
-import { FaHeart, FaShoppingCart, FaEdit } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
+import { FaHeart, FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const ViewBookDetails = () => {
@@ -17,40 +16,24 @@ const ViewBookDetails = () => {
     localStorage.getItem("isLoggedIn") === "true";
 
   const role =
-    useSelector((state) => state.auth.role) ||
-    localStorage.getItem("role");
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:1000/api/v1/get-book-by-id/${id}`
-      );
-      setData(response.data.data);
-    } catch (error) {
-      console.error("Error fetching book details:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    useSelector((state) => state.auth.role) || localStorage.getItem("role");
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:1000/api/v1/get-book-by-id/${id}`
+        );
+        setData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching book details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, [id]);
-
-  const handleFavourite = () => {
-    console.log("Add to Favourites clicked");
-    // Implement the logic for adding to favourites
-  };
-
-  const handleEdit = () => {
-    console.log("Edit clicked");
-    // Implement the logic for editing the book details
-  };
-
-  const handleDelete = () => {
-    console.log("Delete clicked");
-    // Implement the logic for deleting the book
-  };
 
   if (loading) {
     return (
@@ -63,64 +46,53 @@ const ViewBookDetails = () => {
   return (
     <>
       {data && (
-        <div className="px-4 md:px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8 items-start">
-          {/* Left Section: Image and Buttons */}
-          <div className="w-full lg:w-3/6 flex flex-col items-center relative">
-            <div className="bg-zinc-800 p-6 rounded-lg shadow-lg w-full flex flex-col items-center relative">
+        <div className="px-4 md:px-12 py-10 bg-zinc-900 flex flex-col md:flex-row gap-10 items-start">
+          {/* Image & Action Buttons */}
+          <div className="w-full md:w-1/3 flex flex-col items-center gap-6">
+            <div className="bg-zinc-800 p-6 rounded-xl shadow-md w-full flex justify-center">
               <img
                 src={data.url}
-                alt={data.title || "Book image"}
-                className="h-[50vh] md:h-[60vh] lg:h-[70vh] rounded object-cover"
+                alt={data.title}
+                className="rounded-lg h-[60vh] object-cover shadow"
               />
-              {isLoggedIn && role === "user" && (
-                <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8 lg:mt-0">
-                  <button
-                    className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 text-red-500 flex items-center justify-center"
-                    onClick={handleFavourite}
-                  >
-                    <FaHeart />
-                    <span className="ms-4 block lg:hidden">Favourites</span>
-                  </button>
-                  <button className="text-white rounded mt-8 md:mt-0 lg:rounded-full text-4xl lg:text-3xl p-3 lg:mt-8 bg-blue-500 flex items-center justify-center">
-                    <FaShoppingCart />
-                    <span className="ms-4 block lg:hidden">Add to cart</span>
-                  </button>
-                </div>
-              )}
-              {isLoggedIn && role === "admin" && (
-                <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8 lg:mt-0">
-                  <button
-                    className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center justify-center"
-                    onClick={handleEdit}
-                  >
-                    <FaEdit />
-                    <span className="ms-4 block lg:hidden">Edit</span>
-                  </button>
-                  <button
-                    className="text-red-500 rounded lg:rounded-full text-4xl lg:text-3xl p-3 mt-8 md:mt-0 lg:mt-8 bg-white flex items-center justify-center"
-                    onClick={handleDelete}
-                  >
-                    <MdOutlineDelete />
-                    <span className="ms-4 block lg:hidden">Delete Book</span>
-                  </button>
-                </div>
-              )}
             </div>
+
+            {isLoggedIn && role === "user" && (
+              <div className="flex gap-4 w-full justify-center lg:flex-col items-center">
+                <button
+                  className="bg-white hover:bg-zinc-200 transition text-red-500 text-2xl p-3 px-5 rounded-full flex items-center gap-3 shadow-sm"
+                  title="Add to Favorites"
+                >
+                  <FaHeart />
+                  <span className="hidden lg:inline text-sm font-medium text-zinc-700">
+                    Favourites
+                  </span>
+                </button>
+                <button
+                  className="bg-white hover:bg-zinc-200 transition text-blue-500 text-2xl p-3 px-5 rounded-full flex items-center gap-3 shadow-sm"
+                  title="Add to Cart"
+                >
+                  <FaShoppingCart />
+                  <span className="hidden lg:inline text-sm font-medium text-zinc-700">
+                    Add to Cart
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Right Section: Book Details */}
-          <div className="p-4 w-full lg:w-3/6">
-            <h1 className="text-4xl text-zinc-300 font-semibold">
-              {data.title}
-            </h1>
-            <p className="text-zinc-400 mt-1">by {data.author}</p>
-            <p className="text-zinc-500 mt-4 text-xl leading-relaxed">
-              {data.desc}
+          {/* Book Details */}
+          <div className="w-full md:w-2/3 text-zinc-100 space-y-4">
+            <h1 className="text-4xl font-bold text-zinc-200">{data.title}</h1>
+            <p className="text-zinc-400 text-lg">by {data.author}</p>
+            <p className="text-zinc-400">{data.desc || data.description}</p>
+
+            <p className="flex items-center gap-2 text-zinc-400 pt-2">
+              <GrLanguage className="text-lg" />
+              {data.language}
             </p>
-            <p className="flex mt-4 items-center justify-start text-zinc-400">
-              <GrLanguage className="mr-3" /> {data.language}
-            </p>
-            <p className="mt-4 text-zinc-100 text-3xl font-semibold">
+
+            <p className="text-2xl font-semibold pt-4">
               Price:{" "}
               {new Intl.NumberFormat("en-IN", {
                 style: "currency",
@@ -128,11 +100,6 @@ const ViewBookDetails = () => {
               }).format(data.price)}
             </p>
           </div>
-        </div>
-      )}
-      {!data && (
-        <div className="h-screen bg-zinc-900 flex items-center justify-center">
-          <p className="text-zinc-400 text-xl">No data available</p>
         </div>
       )}
     </>
