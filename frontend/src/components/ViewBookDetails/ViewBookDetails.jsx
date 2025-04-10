@@ -3,7 +3,7 @@ import axios from "axios";
 import Loader from "../Loader/Loader";
 import { useParams } from "react-router-dom";
 import { GrLanguage } from "react-icons/gr";
-import { FaHeart, FaShoppingCart } from "react-icons/fa";
+import { FaHeart, FaShoppingCart, FaEdit } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const ViewBookDetails = () => {
@@ -18,11 +18,18 @@ const ViewBookDetails = () => {
   const role =
     useSelector((state) => state.auth.role) || localStorage.getItem("role");
 
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+    bookId: id,
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetch = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:1000/api/v1/get-book-by-id/${id}`
+          `http://localhost:1000/api/v1/get-book-by-id/${id}`,
+          { headers }
         );
         setData(response.data.data);
       } catch (error) {
@@ -32,8 +39,38 @@ const ViewBookDetails = () => {
       }
     };
 
-    fetchData();
+    fetch();
   }, [id]);
+
+  const handleFavourite = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:1000/api/v1/add-book-to-favourite",
+        {},
+        { headers }
+      );
+      alert(response.data.message);
+      console.log("Added to Favourites:", response.data.message);
+    } catch (error) {
+      console.error("Error adding to favourites:", error.response?.data || error.message);
+      alert("Failed to add to favourites. Please try again.");
+    }
+  };
+
+  const handleCart = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:1000/api/v1/add-to-cart",
+        {},
+        { headers }
+      );
+      alert(response.data.message);
+      console.log("Added to Cart:", response.data.message);
+    } catch (error) {
+      console.error("Error adding to cart:", error.response?.data || error.message);
+      alert("Failed to add to cart. Please try again.");
+    }
+  };
 
   if (loading) {
     return (
@@ -46,36 +83,42 @@ const ViewBookDetails = () => {
   return (
     <>
       {data && (
-        <div className="px-4 md:px-12 py-10 bg-zinc-900 flex flex-col md:flex-row gap-10 items-start">
+        <div className="px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start">
           {/* Image & Action Buttons */}
           <div className="w-full md:w-1/3 flex flex-col items-center gap-6">
             <div className="bg-zinc-800 p-6 rounded-xl shadow-md w-full flex justify-center">
               <img
                 src={data.url}
                 alt={data.title}
-                className="rounded-lg h-[60vh] object-cover shadow"
+                className="h-[50vh] md:h-[60vh] lg:h-[70vh] rounded"
               />
             </div>
 
             {isLoggedIn && role === "user" && (
-              <div className="flex gap-4 w-full justify-center lg:flex-col items-center">
+              <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-4 gap-4">
                 <button
-                  className="bg-white hover:bg-zinc-200 transition text-red-500 text-2xl p-3 px-5 rounded-full flex items-center gap-3 shadow-sm"
-                  title="Add to Favorites"
+                  className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 text-red-500 flex items-center gap-3"
+                  onClick={handleFavourite}
                 >
                   <FaHeart />
-                  <span className="hidden lg:inline text-sm font-medium text-zinc-700">
-                    Favourites
-                  </span>
+                  <span className="ms-4 block lg:hidden">Favourites</span>
                 </button>
                 <button
-                  className="bg-white hover:bg-zinc-200 transition text-blue-500 text-2xl p-3 px-5 rounded-full flex items-center gap-3 shadow-sm"
-                  title="Add to Cart"
+                  className="bg-white text-blue-500 rounded mt-8 md:mt-0 lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center gap-3" onClick={handleCart}
                 >
                   <FaShoppingCart />
-                  <span className="hidden lg:inline text-sm font-medium text-zinc-700">
-                    Add to Cart
-                  </span>
+                  <span className="ms-4 block lg:hidden">Add to Cart</span>
+                </button>
+              </div>
+            )}
+
+            {isLoggedIn && role === "admin" && (
+              <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-4 gap-4">
+                <button
+                  className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center gap-3"
+                >
+                  <FaEdit />
+                  <span className="ms-4 block lg:hidden">Edit</span>
                 </button>
               </div>
             )}

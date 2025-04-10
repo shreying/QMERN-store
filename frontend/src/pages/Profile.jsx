@@ -8,6 +8,7 @@ import Loader from "../components/Loader/Loader"; // Import Loader if not alread
 const Profile = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [profile, setProfile] = useState(null); // Initialize profile state
+
   const headers = {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -35,15 +36,16 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="bg-zinc-900 px-2 md:px-12 flex flex-col md:flex-row h-screen py-8 gap-4 text-white">
-      {!profile && 
-      <div className="w-full h-[100%] flex justify-center items-center ">
-        <Loader />
-      </div>} 
+    <div className="bg-zinc-900 px-2 md:px-12 flex flex-col md:flex-row py-8 gap-4 text-white">
+      {!profile && (
+        <div className="w-full h-[100%] flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
       {profile && (
         <>
-          <div className="w-full md:w-1/6">
-            <Sidebar data={profile} /> 
+          <div className="w-full md:w-1/6 h-screen">
+            <Sidebar data={profile} />
           </div>
           <div className="w-full md:w-5/6">
             <Outlet />
