@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn); // Get isLoggedIn from Redux
+  const role = useSelector((state) => state.auth.role); // Get role from Redux
   const [MobileNav, setMobileNav] = useState("hidden");
 
   // Define navigation links
@@ -13,6 +14,7 @@ const Navbar = () => {
     { title: "All Books", link: "/all-books" },
     { title: "Cart", link: "/cart" },
     { title: "Profile", link: "/profile" },
+    { title: "Admin Profile", link: "/profile" },
   ];
 
   // Remove "Cart" and "Profile" links if not logged in
@@ -20,6 +22,15 @@ const Navbar = () => {
     links.splice(2, 2); // Remove 2 items starting from index 2
   }
 
+  // If logged in and role is admin, remove "Profile" link
+  if (isLoggedIn && role === "admin") {
+    links.splice(3, 1); // Remove "Profile" link at index 3
+  }
+
+  //If logged in and role is user
+  if (isLoggedIn && role === "user") {
+    links.splice(4, 1); // Remove "Admin Profile" link at index 4
+  }
   // Toggle mobile nav visibility
   const toggleMobileNav = () => {
     setMobileNav((prev) => (prev === "hidden" ? "block" : "hidden"));
@@ -38,7 +49,7 @@ const Navbar = () => {
               <Link
                 to={item.link}
                 className={`hover:text-blue-700 transition-all duration-300 ${
-                  item.title === "Profile" ? "hover:bg-white hover:text-zinc-800 hover:rounded-lg px-2 py-1" : ""
+                  item.title === "Profile" || item.title =="Admin Profile" ? "hover:bg-white hover:text-zinc-800 hover:rounded-lg px-2 py-1" : ""
                 }`}
               >
                 {item.title}

@@ -24,18 +24,19 @@ router.put("/add-book-to-favourite", authenticateToken, async (req, res) => {
 });
 
 // Remove book from favourites
-router.put("/remove-book-from-favourite", authenticateToken, async (req, res) => {
+router.put("/remove-book-from-favourite", authenticateToken, async (req, res) => { 
   try {
-    const { bookid, id } = req.headers;
+    const { bookId } = req.body; // ✅ from body
+    const id = req.headers.id;   // ✅ user id from headers
 
     const userData = await User.findById(id);
-    const isBookFavourite = userData.favourites.includes(bookid);
+    const isBookFavourite = userData.favourites.includes(bookId);
 
     if (!isBookFavourite) {
       return res.status(200).json({ message: "Book is not in favourites" });
     }
 
-    await User.findByIdAndUpdate(id, { $pull: { favourites: bookid } });
+    await User.findByIdAndUpdate(id, { $pull: { favourites: bookId } });
 
     return res.status(200).json({ message: "Book removed from favourites" });
   } catch (error) {
@@ -43,6 +44,7 @@ router.put("/remove-book-from-favourite", authenticateToken, async (req, res) =>
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // Get all favourite books of a user
 router.get("/get-favourite-books", authenticateToken, async (req, res) => {

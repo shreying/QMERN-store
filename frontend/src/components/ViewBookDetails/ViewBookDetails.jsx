@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { GrLanguage } from "react-icons/gr";
 import { FaHeart, FaShoppingCart, FaEdit } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ViewBookDetails = () => {
   const { id } = useParams();
@@ -49,11 +51,11 @@ const ViewBookDetails = () => {
         {},
         { headers }
       );
-      alert(response.data.message);
+      toast.success(response.data.message); // Show success toast
       console.log("Added to Favourites:", response.data.message);
     } catch (error) {
       console.error("Error adding to favourites:", error.response?.data || error.message);
-      alert("Failed to add to favourites. Please try again.");
+      toast.error("Failed to add to favourites. Please try again."); // Show error toast
     }
   };
 
@@ -64,11 +66,11 @@ const ViewBookDetails = () => {
         {},
         { headers }
       );
-      alert(response.data.message);
+      toast.success(response.data.message); // Show success toast
       console.log("Added to Cart:", response.data.message);
     } catch (error) {
       console.error("Error adding to cart:", error.response?.data || error.message);
-      alert("Failed to add to cart. Please try again.");
+      toast.error("Failed to add to cart. Please try again."); // Show error toast
     }
   };
 
@@ -82,6 +84,9 @@ const ViewBookDetails = () => {
 
   return (
     <>
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
+
       {data && (
         <div className="px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start">
           {/* Image & Action Buttons */}
@@ -104,7 +109,8 @@ const ViewBookDetails = () => {
                   <span className="ms-4 block lg:hidden">Favourites</span>
                 </button>
                 <button
-                  className="bg-white text-blue-500 rounded mt-8 md:mt-0 lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center gap-3" onClick={handleCart}
+                  className="bg-white text-blue-500 rounded mt-8 md:mt-0 lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center gap-3"
+                  onClick={handleCart}
                 >
                   <FaShoppingCart />
                   <span className="ms-4 block lg:hidden">Add to Cart</span>

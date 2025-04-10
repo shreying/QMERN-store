@@ -14,6 +14,8 @@ import { authActions } from "./store/auth";
 import Favourites from "./components/Profile/Favourites"; // Ensure this path is correct
 import UserOrderHistory from "./components/Profile/UserOrderHistory";
 import Settings from "./components/Profile/Settings"; // Ensure this path is correct
+import AllOrders from "./pages/AllOrders"; // Ensure this path is correct
+import AddBook from "./pages/AddBook";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -38,7 +40,12 @@ const App = () => {
         <Route path="/all-books" element={<AllBooks />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />}>
-          <Route index element={<Favourites />} />
+          {/* Conditionally render the default route based on the role */}
+          {role === "user" && <Route index element={<Favourites />} />}
+          {role === "admin" && <Route index element={<AllOrders />} />}
+          {role === "admin" && (
+            <Route path="/profile/add-book" element={<AddBook />} />
+          )}
           <Route path="/profile/orderHistory" element={<UserOrderHistory />} />
           <Route path="/profile/settings" element={<Settings />} />
         </Route>
