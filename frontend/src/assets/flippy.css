@@ -1,0 +1,56 @@
+/* flippy.css */
+.flippy-card {
+    width: 100%;
+    max-width: 500px;
+    height: 400px;
+    perspective: 1500px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .big-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .flippy-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  .flippy-card:hover .flippy-inner {
+    transform: rotateY(180deg);
+  }
+  
+  .flippy-front, .flippy-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    overflow: hidden;
+    border-radius: 1.5rem;
+  }
+  
+  .flippy-front img {
+    transition: transform 0.8s ease, filter 0.3s ease;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 1.5rem;
+  }
+  
+  .fancy-img:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.2) contrast(1.1) saturate(1.3) drop-shadow(0 0 12px rgba(255, 255, 0, 0.5));
+  }
+  
+  .flippy-back {
+    background: #111;
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.5rem;
+  }
+  
