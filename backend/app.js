@@ -12,6 +12,7 @@ const Order = require("./routes/order.js");
 
 app.use(cors({
   origin: 'http://localhost:5173', // your frontend dev URL
+  
   credentials: true, // if you're using cookies
 }));
 
