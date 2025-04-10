@@ -11,22 +11,12 @@ const ViewBookDetails = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  
   const isLoggedIn =
     useSelector((state) => state.auth.isLoggedIn) ||
     localStorage.getItem("isLoggedIn") === "true";
 
   const role =
-    useSelector((state) => state.auth.role) ||
-    localStorage.getItem("role");
-
-  console.log("🔥 ViewBookDetails rendering...");
-  console.log("✨ isLoggedIn:", isLoggedIn);
-  console.log("👑 role:", role, typeof role);
-  console.log("Condition:", isLoggedIn === true && role === "user");
-  console.log("Token:", localStorage.getItem("token"));
-  console.log("ID:", localStorage.getItem("id"));
-  console.log("Role from LS:", localStorage.getItem("role"));
+    useSelector((state) => state.auth.role) || localStorage.getItem("role");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,47 +46,53 @@ const ViewBookDetails = () => {
   return (
     <>
       {data && (
-        <div className="px-4 md:px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8 items-start">
-          {/* Left Section: Image and Buttons */}
-          <div className="w-full lg:w-3/6">
-            <div className="flex justify-around bg-zinc-800 p-12 rounded">
+        <div className="px-4 md:px-12 py-10 bg-zinc-900 flex flex-col md:flex-row gap-10 items-start">
+          {/* Image & Action Buttons */}
+          <div className="w-full md:w-1/3 flex flex-col items-center gap-6">
+            <div className="bg-zinc-800 p-6 rounded-xl shadow-md w-full flex justify-center">
               <img
                 src={data.url}
                 alt={data.title}
-                className="h-[50vh] lg:h-[70vh] rounded object-cover"
+                className="rounded-lg h-[60vh] object-cover shadow"
               />
-              {isLoggedIn === true && role === "user" && (
-                <div className="flex md:flex-col">
-                  <button
-                    className="bg-white rounded-full text-3xl p-3 text-red-500 shadow-md hover:bg-zinc-200 transition-all"
-                    title="Add to Favorites"
-                    aria-label="Add to Favorites"
-                  >
-                    <FaHeart />
-                  </button>
-                  <button
-                    className="bg-white rounded-full text-3xl p-3 mt-8 text-blue-500 shadow-md hover:bg-zinc-200 transition-all"
-                    title="Add to Cart"
-                    aria-label="Add to Cart"
-                  >
-                    <FaShoppingCart />
-                  </button>
-                </div>
-              )}
             </div>
+
+            {isLoggedIn && role === "user" && (
+              <div className="flex gap-4 w-full justify-center lg:flex-col items-center">
+                <button
+                  className="bg-white hover:bg-zinc-200 transition text-red-500 text-2xl p-3 px-5 rounded-full flex items-center gap-3 shadow-sm"
+                  title="Add to Favorites"
+                >
+                  <FaHeart />
+                  <span className="hidden lg:inline text-sm font-medium text-zinc-700">
+                    Favourites
+                  </span>
+                </button>
+                <button
+                  className="bg-white hover:bg-zinc-200 transition text-blue-500 text-2xl p-3 px-5 rounded-full flex items-center gap-3 shadow-sm"
+                  title="Add to Cart"
+                >
+                  <FaShoppingCart />
+                  <span className="hidden lg:inline text-sm font-medium text-zinc-700">
+                    Add to Cart
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Right Section: Book Details */}
-          <div className="p-4 w-full lg:w-3/6">
-            <h1 className="text-4xl text-zinc-300 font-semibold">
-              {data.title}
-            </h1>
-            <p className="text-zinc-400 mt-1">by {data.author}</p>
-            <p className="text-zinc-500 mt-4 text-xl">{data.desc}</p>
-            <p className="flex mt-4 items-center justify-start text-zinc-400">
-              <GrLanguage className="mr-3" /> {data.language}
+          {/* Book Details */}
+          <div className="w-full md:w-2/3 text-zinc-100 space-y-4">
+            <h1 className="text-4xl font-bold text-zinc-200">{data.title}</h1>
+            <p className="text-zinc-400 text-lg">by {data.author}</p>
+            <p className="text-zinc-400">{data.desc || data.description}</p>
+
+            <p className="flex items-center gap-2 text-zinc-400 pt-2">
+              <GrLanguage className="text-lg" />
+              {data.language}
             </p>
-            <p className="text-2xl font-semibold text-zinc-100 mt-4">
+
+            <p className="text-2xl font-semibold pt-4">
               Price:{" "}
               {new Intl.NumberFormat("en-IN", {
                 style: "currency",
@@ -111,4 +107,3 @@ const ViewBookDetails = () => {
 };
 
 export default ViewBookDetails;
-
