@@ -7,32 +7,39 @@ const User = require("../models/user");
 //place order
 router.post("/place-order", authenticateToken, async (req, res) => {
     try {
-        const { id } = req.headers;
-        const { order } = req.body;
-        for (const orderData of order) {
-            const newOrder = new Order({
-                user: id,
-                book: orderData._id,
-            });
-            const orderDataFromDb = await newOrder.save();
-            await User.findByIdAndUpdate(id, {
-                $push: { orders: orderDataFromDb._id },
-            });
-            await User.findByIdAndUpdate(id, {
-                $pull: { cart: orderData._id },
-            });
-        }
-
-        return res.json({
-            status: "Success",
-            message: "Order placed successfully",
+      const { id } = req.headers;
+      const { order } = req.body;
+  
+      for (const orderData of order) {
+        const itemPrice = Number(orderData.price) || 0;
+        const itemQuantity = Number(orderData.quantity) || 1;
+  
+        const totalPrice = itemPrice * itemQuantity;
+  
+        const newOrder = new Order({
+          user: id,
+          book: orderData._id,
+          totalPrice, // ✅ Add this
         });
+  
+        const orderDataFromDb = await newOrder.save();
+  
+        await User.findByIdAndUpdate(id, {
+          $push: { orders: orderDataFromDb._id },
+          $pull: { cart: orderData._id },
+        });
+      }
+  
+      return res.json({
+        status: "Success",
+        message: "Order placed successfully",
+      });
     } catch (error) {
-        console.error("Error placing order:", error.message);
-        res.status(500).json({ message: "Internal server error" });
+      console.error("Error placing order:", error.message);
+      res.status(500).json({ message: "Internal server error" });
     }
-
 });
+  
 
 //get order history of user
 router.get("/get-order-history", authenticateToken, async (req, res) => {
