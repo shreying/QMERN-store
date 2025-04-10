@@ -26,6 +26,12 @@ const Favourites = () => {
     fetch();
   }, []); // Empty dependency array to fetch only once on component mount
 
+  const handleRemoveBook = (bookId) => {
+    setFavouriteBooks((prevBooks) =>
+      prevBooks.filter((book) => book._id !== bookId)
+    );
+  };
+
   return (
     <>
       {favouriteBooks.length === 0 ? (
@@ -33,10 +39,14 @@ const Favourites = () => {
           No Favourite Books
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 p-6 bg-zinc-900">
           {favouriteBooks.map((items, i) => (
             <div key={i}>
-              <BookCard data={items} favourite={true} />
+              <BookCard
+                data={items}
+                favourite={true}
+                handleRemoveBook={handleRemoveBook} // Pass the handler to BookCard
+              />
             </div>
           ))}
         </div>
