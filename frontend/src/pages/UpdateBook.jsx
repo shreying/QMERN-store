@@ -40,8 +40,10 @@ const UpdateBook = () => {
           language: response.data.data.language,
         });
       } catch (error) {
-        console.error("Error fetching book details:", error.response?.data || error.message);
-        toast.error("Failed to fetch book details.");
+        const errorMessage =
+          error.response?.data?.message || "Failed to fetch book details.";
+        console.error("Error fetching book details:", errorMessage);
+        toast.error(errorMessage);
         navigate(`/view-book-details/${id}`); // Redirect to view book details page on error
       } finally {
         setLoading(false);
@@ -53,7 +55,6 @@ const UpdateBook = () => {
 
   const change = (e) => {
     const { name, value } = e.target;
-    console.log(`Updating ${name}: ${value}`); // Debugging
     setData({ ...Data, [name]: value });
   };
 
@@ -72,8 +73,10 @@ const UpdateBook = () => {
       toast.success("Book updated successfully!");
       navigate(`/view-book-details/${id}`); // Redirect to the updated book's details page
     } catch (error) {
-      console.error("Error updating book:", error.response?.data || error.message);
-      toast.error("Failed to update book. Please try again.");
+      const errorMessage =
+        error.response?.data?.message || "Failed to update book. Please try again.";
+      console.error("Error updating book:", errorMessage);
+      toast.error(errorMessage);
     }
   };
 
