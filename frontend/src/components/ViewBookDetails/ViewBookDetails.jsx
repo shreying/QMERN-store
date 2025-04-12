@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../Loader/Loader";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { GrLanguage } from "react-icons/gr";
 import { FaHeart, FaShoppingCart, FaEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate, Link } from "react-router-dom";
 
 const ViewBookDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showDeletePopup, setShowDeletePopup] = useState(false); // State for delete confirmation popup
 
   const isLoggedIn =
     useSelector((state) => state.auth.isLoggedIn) ||
@@ -55,7 +55,6 @@ const ViewBookDetails = () => {
         { headers }
       );
       toast.success(response.data.message); // Show success toast
-      console.log("Added to Favourites:", response.data.message);
     } catch (error) {
       console.error("Error adding to favourites:", error.response?.data || error.message);
       toast.error("Failed to add to favourites. Please try again."); // Show error toast
@@ -64,18 +63,17 @@ const ViewBookDetails = () => {
 
   const deleteBook = async () => {
     try {
-        const response = await axios.delete(
-            `http://localhost:1000/api/v1/delete-book/${id}`, // Pass book ID in URL
-            { headers } // Include headers for authentication
-        );
-        console.log(response.data); // Log the response
-        toast.success("Book deleted successfully!"); // Show success toast
-        navigate("/all-books"); // Redirect to home page after deletion
+      const response = await axios.delete(
+        `http://localhost:1000/api/v1/delete-book/${id}`,
+        { headers }
+      );
+      toast.success("Book deleted successfully!"); // Show success toast
+      navigate("/all-books"); // Redirect to all books page after deletion
     } catch (error) {
-        console.error("Error deleting book:", error.response?.data || error.message);
-        toast.error("Failed to delete the book. Please try again."); // Show error toast
+      console.error("Error deleting book:", error.response?.data || error.message);
+      toast.error("Failed to delete the book. Please try again."); // Show error toast
     }
-};
+  };
 
   const handleCart = async () => {
     try {
@@ -85,7 +83,6 @@ const ViewBookDetails = () => {
         { headers }
       );
       toast.success(response.data.message); // Show success toast
-      console.log("Added to Cart:", response.data.message);
     } catch (error) {
       console.error("Error adding to cart:", error.response?.data || error.message);
       toast.error("Failed to add to cart. Please try again."); // Show error toast
@@ -104,6 +101,34 @@ const ViewBookDetails = () => {
     <>
       {/* Toast Container */}
       <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* Delete Confirmation Popup */}
+      {showDeletePopup && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-[90%] md:w-[50%] lg:w-[30%] shadow-lg">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Are you sure you want to delete this book?
+            </h2>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeletePopup(false)} // Close popup
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  deleteBook(); // Call deleteBook function
+                  setShowDeletePopup(false); // Close popup after deletion
+                }}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {data && (
         <div className="px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start">
@@ -139,7 +164,7 @@ const ViewBookDetails = () => {
             {isLoggedIn && role === "admin" && (
               <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8">
                 <Link
-                  to={`/update-book/${id}`} // Link to the update book page
+                  to={`/update-book/${id}`}
                   className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center justify-center"
                 >
                   <FaEdit />
@@ -147,7 +172,7 @@ const ViewBookDetails = () => {
                 </Link>
                 <button
                   className="text-red-500 rounded lg:rounded-full text-4xl lg:text-3xl p-3 mt-8 md:mt-0 lg:mt-8 flex items-center justify-center"
-                  onClick={deleteBook} // Call deleteBook function on click
+                  onClick={() => setShowDeletePopup(true)} // Show delete confirmation popup
                 >
                   <MdOutlineDelete />
                   <span className="ms-4 block lg:hidden">Delete Book</span>

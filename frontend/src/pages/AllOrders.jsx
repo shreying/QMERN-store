@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 import { FaCheck, FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SeeUserData from "../pages/SeeUserData"; // Import the SeeUserData component
+import SeeUserData from "../pages/SeeUserData";
 
 const AllOrders = () => {
-  const [allOrders, setAllOrders] = useState(null); // State to store all orders
-  const [loading, setLoading] = useState(true); // State to manage loader
-  const [selectedStatus, setSelectedStatus] = useState({}); // State to track selected status for each order
-  const [userDiv, setUserDiv] = useState(false); // State to toggle user details visibility
-  const [userDivData, setUserDivData] = useState(null); // State to store user data for SeeUserData
+  const [allOrders, setAllOrders] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedStatus, setSelectedStatus] = useState({});
+  const [userDiv, setUserDiv] = useState(false);
+  const [userDivData, setUserDivData] = useState(null);
 
   const headers = {
     id: localStorage.getItem("id"),
@@ -26,11 +26,11 @@ const AllOrders = () => {
           "http://localhost:1000/api/v1/get-all-orders",
           { headers }
         );
-        setAllOrders(response.data.data); // Set orders in state
+        setAllOrders(response.data.data);
       } catch (error) {
         console.error("Error fetching orders:", error.response?.data || error.message);
       } finally {
-        setLoading(false); // Stop loader
+        setLoading(false);
       }
     };
 
@@ -59,16 +59,16 @@ const AllOrders = () => {
         delete updated[orderId];
         return updated;
       });
-      toast.success(`Order status updated to "${newStatus}"!`); // Show success toast
+      toast.success(`Order status updated to "${newStatus}"!`);
     } catch (error) {
       console.error("Error updating order status:", error.response?.data || error.message);
-      toast.error("Failed to update order status."); // Show error toast
+      toast.error("Failed to update order status.");
     }
   };
 
   const handleUserClick = (user) => {
-    setUserDivData(user); // Set the user data for SeeUserData
-    setUserDiv(true); // Show the user details
+    setUserDivData(user);
+    setUserDiv(true);
   };
 
   if (loading) {
@@ -86,7 +86,6 @@ const AllOrders = () => {
         All Orders
       </h1>
 
-      {/* Render SeeUserData if userDiv is true */}
       {userDiv && (
         <SeeUserData
           userDivData={userDivData}
@@ -97,7 +96,6 @@ const AllOrders = () => {
 
       {allOrders && allOrders.length > 0 ? (
         <>
-          {/* Table Header */}
           <div className="mt-4 bg-zinc-800 w-full rounded py-2 px-4 flex gap-2">
             <div className="w-[3%]">
               <h1 className="text-center">Sr.</h1>
@@ -119,96 +117,96 @@ const AllOrders = () => {
             </div>
           </div>
 
-          {/* Table Rows */}
           <div className="space-y-4 mt-4">
-            {allOrders.map((order, index) => (
-              <div
-                key={order._id}
-                className="bg-zinc-800 w-full rounded py-2 px-4 flex gap-2 items-center hover:bg-zinc-900 hover:cursor-pointer transition-all duration-300"
-              >
-                {/* Sr. */}
-                <div className="w-[3%]">
-                  <p className="text-center">{index + 1}</p>
-                </div>
+            {allOrders
+              .filter((order) => order.book) // Filter out orders with deleted books
+              .map((order, index) => (
+                <div
+                  key={order._id}
+                  className="bg-zinc-800 w-full rounded py-2 px-4 flex gap-2 items-center hover:bg-zinc-900 hover:cursor-pointer transition-all duration-300"
+                >
+                  {/* Serial Number */}
+                  <div className="w-[3%]">
+                    <p className="text-center">{index + 1}</p>
+                  </div>
 
-                {/* Book Image */}
-                <div className="w-[10%]">
-                  <img
-                    src={order.book.url || "/placeholder.png"}
-                    alt={order.book.title}
-                    className="h-12 w-12 object-cover rounded"
-                  />
-                </div>
+                  {/* Book Image */}
+                  <div className="w-[10%]">
+                    <img
+                      src={order.book.url || "/placeholder.png"} // Use placeholder if URL is missing
+                      alt={order.book.title || "Book Image"} // Fallback alt text
+                      className="h-12 w-12 object-cover rounded"
+                    />
+                  </div>
 
-                {/* Book Title */}
-                <div className="w-[30%] md:w-[22%]">
-                  <Link
-                    to={`/view-book-details/${order.book._id}`}
-                    className="hover:text-blue-300"
-                  >
-                    {order.book.title}
-                  </Link>
-                </div>
+                  {/* Book Title */}
+                  <div className="w-[30%] md:w-[22%]">
+                    <Link
+                      to={`/view-book-details/${order.book._id}`}
+                      className="hover:text-blue-300"
+                    >
+                      {order.book.title}
+                    </Link>
+                  </div>
 
-                {/* User Info */}
-                <div className="w-0 md:w-[30%] hidden md:block">
-                  <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => handleUserClick(order.user)}
-                  >
-                    <FaUser className="text-blue-400" />
-                    <p>{order.user.name}</p>
+                  {/* User Info */}
+                  <div className="w-0 md:w-[30%] hidden md:block">
+                    <div
+                      className="flex items-center gap-2 cursor-pointer"
+                      onClick={() => handleUserClick(order.user)}
+                    >
+                      <FaUser className="text-blue-400" />
+                      <p>{order.user.name}</p>
+                    </div>
+                  </div>
+
+                  {/* Book Price */}
+                  <div className="w-[17%] md:w-[9%]">
+                    <p>₹{order.book.price}</p>
+                  </div>
+
+                  {/* Order Status */}
+                  <div className="w-[30%] md:w-[16%] flex flex-col gap-2">
+                    <p
+                      className={`text-sm font-medium px-3 py-1 rounded-full ${
+                        order.status === "Order Delivered"
+                          ? "bg-green-500 text-white"
+                          : order.status === "Order Shipped"
+                          ? "bg-yellow-500 text-white"
+                          : order.status === "Order Placed"
+                          ? "bg-blue-500 text-white"
+                          : "bg-red-500 text-white"
+                      }`}
+                    >
+                      {order.status}
+                    </p>
+
+                    {/* Status Dropdown */}
+                    <div className="flex items-center gap-2">
+                      <select
+                        name="status"
+                        className="bg-gray-800 text-white rounded px-2 py-1"
+                        value={selectedStatus[order._id] || order.status}
+                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                      >
+                        {["Order Placed", "Order Shipped", "Order Delivered", "Canceled"].map(
+                          (status, i) => (
+                            <option key={i} value={status}>
+                              {status}
+                            </option>
+                          )
+                        )}
+                      </select>
+                      <button
+                        onClick={() => updateStatus(order._id)}
+                        className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full transition-all duration-300"
+                      >
+                        <FaCheck />
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                {/* Price */}
-                <div className="w-[17%] md:w-[9%]">
-                  <p>₹{order.book.price}</p>
-                </div>
-
-                {/* Status */}
-                <div className="w-[30%] md:w-[16%] flex flex-col gap-2">
-                  {/* Status Label */}
-                  <p
-                    className={`text-sm font-medium px-3 py-1 rounded-full ${
-                      order.status === "Order Delivered"
-                        ? "bg-green-500 text-white"
-                        : order.status === "Order Shipped"
-                        ? "bg-yellow-500 text-white"
-                        : order.status === "Order Placed"
-                        ? "bg-blue-500 text-white"
-                        : "bg-red-500 text-white"
-                    }`}
-                  >
-                    {order.status}
-                  </p>
-
-                  {/* Dropdown and Button */}
-                  <div className="flex items-center gap-2">
-                    <select
-                      name="status"
-                      className="bg-gray-800 text-white rounded px-2 py-1"
-                      value={selectedStatus[order._id] || order.status}
-                      onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                    >
-                      {["Order Placed", "Order Shipped", "Order Delivered", "Canceled"].map(
-                        (status, i) => (
-                          <option key={i} value={status}>
-                            {status}
-                          </option>
-                        )
-                      )}
-                    </select>
-                    <button
-                      onClick={() => updateStatus(order._id)}
-                      className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full transition-all duration-300"
-                    >
-                      <FaCheck />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </>
       ) : (
