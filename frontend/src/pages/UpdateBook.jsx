@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader/Loader";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UpdateBook = () => {
   const { id } = useParams(); // Get book ID from URL
@@ -86,6 +87,8 @@ const UpdateBook = () => {
 
   return (
     <div className="bg-zinc-900 h-auto px-12 py-8">
+      {/* Toastify Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
       <h4 className="text-3xl text-yellow-100 font-bold my-8">Update Book</h4>
       <form onSubmit={submit} className="space-y-6">
         <div>

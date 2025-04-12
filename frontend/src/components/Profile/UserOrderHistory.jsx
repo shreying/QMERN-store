@@ -67,7 +67,12 @@ const UserOrderHistory = () => {
               {/* Order Details */}
               <div className="flex-1">
                 <h2 className="text-2xl text-zinc-100 font-semibold">
-                  {order.book.title}
+                  <Link
+                    to={`/view-book-details/${order.book._id}`}
+                    className="hover:underline hover:text-blue-400 transition"
+                  >
+                    {order.book.title}
+                  </Link>
                 </h2>
                 <p className="text-sm text-zinc-400 mt-2">
                   Author: {order.book.author}
