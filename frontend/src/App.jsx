@@ -11,11 +11,14 @@ import Profile from "./pages/Profile";
 import ViewBookDetails from "./components/ViewBookDetails/ViewBookDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./store/auth";
-import Favourites from "./components/Profile/Favourites"; // Ensure this path is correct
+import Favourites from "./components/Profile/Favourites";
 import UserOrderHistory from "./components/Profile/UserOrderHistory";
-import Settings from "./components/Profile/Settings"; // Ensure this path is correct
-import AllOrders from "./pages/AllOrders"; // Ensure this path is correct
+import Settings from "./components/Profile/Settings";
+import AllOrders from "./pages/AllOrders";
 import AddBook from "./pages/AddBook";
+import UpdateBook from "./pages/UpdateBook";
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const App = () => {
   const dispatch = useDispatch();
@@ -40,7 +43,6 @@ const App = () => {
         <Route path="/all-books" element={<AllBooks />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />}>
-          {/* Conditionally render the default route based on the role */}
           {role === "user" && <Route index element={<Favourites />} />}
           {role === "admin" && <Route index element={<AllOrders />} />}
           {role === "admin" && (
@@ -51,9 +53,11 @@ const App = () => {
         </Route>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
+        <Route path="/update-book/:id" element={<UpdateBook />} />
         <Route path="/view-book-details/:id" element={<ViewBookDetails />} />
       </Routes>
       <Footer />
+      <ToastContainer position="top-right" autoClose={3000} /> {/* Add ToastContainer */}
     </div>
   );
 };

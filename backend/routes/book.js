@@ -32,34 +32,54 @@ router.post('/add-book', authenticateToken, async (req, res) => {
 });
 
 //update book --admin
-router.put("/update-book", authenticateToken, async (req, res) => {
+router.put("/update-book/:id", authenticateToken, async (req, res) => {
     try {
-        const { bookid } = req.headers;
-        await Book.findByIdAndUpdate(bookid, {
-            url: req.body.url,
-            title: req.body.title,
-            author: req.body.author,
-            price: req.body.price,
-            description: req.body.description,
-            language: req.body.language,
-        });
+        const { id } = req.params; // Get book ID from URL
+        const user = await User.findById(req.headers.id); // Validate admin role
+        if (user.role !== "admin") {
+            return res.status(403).json({ message: "Access denied" });
+        }
 
-        return res.status(200).json({ message: "Book updated successfully" });
-    }
-    catch (error) {
+        const updatedBook = await Book.findByIdAndUpdate(
+            id,
+            {
+                url: req.body.url,
+                title: req.body.title,
+                author: req.body.author,
+                price: req.body.price,
+                description: req.body.description,
+                language: req.body.language,
+            },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedBook) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
+        return res.status(200).json({ message: "Book updated successfully", data: updatedBook });
+    } catch (error) {
         console.error("Error:", error.message);
         return res.status(500).json({ message: "Internal server error" });
     }
 });
 
 //delete book --admin
-router.delete("/delete-book", authenticateToken, async (req, res) => {
+router.delete("/delete-book/:id", authenticateToken, async (req, res) => {
     try {
-        const { bookid } = req.headers;
-        await Book.findByIdAndDelete(bookid);
+        const { id } = req.params; // Get book ID from URL
+        const user = await User.findById(req.headers.id); // Validate admin role
+        if (user.role !== "admin") {
+            return res.status(403).json({ message: "Access denied" });
+        }
+
+        const book = await Book.findByIdAndDelete(id);
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+
         return res.status(200).json({ message: "Book deleted successfully" });
-    }
-    catch (error) {
+    } catch (error) {
         console.error("Error:", error.message);
         return res.status(500).json({ message: "Internal server error" });
     }

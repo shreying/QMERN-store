@@ -4,12 +4,15 @@ import Loader from "../Loader/Loader";
 import { useParams } from "react-router-dom";
 import { GrLanguage } from "react-icons/gr";
 import { FaHeart, FaShoppingCart, FaEdit } from "react-icons/fa";
+import { MdOutlineDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate, Link } from "react-router-dom";
 
 const ViewBookDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -58,6 +61,21 @@ const ViewBookDetails = () => {
       toast.error("Failed to add to favourites. Please try again."); // Show error toast
     }
   };
+
+  const deleteBook = async () => {
+    try {
+        const response = await axios.delete(
+            `http://localhost:1000/api/v1/delete-book/${id}`, // Pass book ID in URL
+            { headers } // Include headers for authentication
+        );
+        console.log(response.data); // Log the response
+        toast.success("Book deleted successfully!"); // Show success toast
+        navigate("/all-books"); // Redirect to home page after deletion
+    } catch (error) {
+        console.error("Error deleting book:", error.response?.data || error.message);
+        toast.error("Failed to delete the book. Please try again."); // Show error toast
+    }
+};
 
   const handleCart = async () => {
     try {
@@ -119,12 +137,20 @@ const ViewBookDetails = () => {
             )}
 
             {isLoggedIn && role === "admin" && (
-              <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-4 gap-4">
-                <button
-                  className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center gap-3"
+              <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8">
+                <Link
+                  to={`/update-book/${id}`} // Link to the update book page
+                  className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center justify-center"
                 >
                   <FaEdit />
                   <span className="ms-4 block lg:hidden">Edit</span>
+                </Link>
+                <button
+                  className="text-red-500 rounded lg:rounded-full text-4xl lg:text-3xl p-3 mt-8 md:mt-0 lg:mt-8 flex items-center justify-center"
+                  onClick={deleteBook} // Call deleteBook function on click
+                >
+                  <MdOutlineDelete />
+                  <span className="ms-4 block lg:hidden">Delete Book</span>
                 </button>
               </div>
             )}
