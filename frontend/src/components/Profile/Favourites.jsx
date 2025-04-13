@@ -35,8 +35,15 @@ const Favourites = () => {
   return (
     <>
       {favouriteBooks.length === 0 ? (
-        <div className="text-5xl font-semibold h-[100vh] text-zinc-500 flex items-center justify-center w-full bg-zinc-900">
-          No Favourite Books
+        <div className="text-center h-[100vh] flex flex-col items-center justify-center w-full bg-zinc-900">
+          <h1 className="text-4xl lg:text-5xl font-semibold text-zinc-500 mb-6">
+            No Favourite Books
+          </h1>
+          <img
+            src="/star.png" // Path to the star.png image
+            alt="No Favourites"
+            className="lg:h-[50vh] h-[30vh] object-contain"
+          />
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-4 p-6 bg-zinc-900">

@@ -26,7 +26,11 @@ const Navbar = () => {
     <>
       <nav className="z-50 relative flex bg-zinc-800 text-white px-8 py-4 items-center justify-between">
         <Link to="/" className="flex items-center">
-          <img className="h-10 me-4" src="./logo.png" alt="logo" />
+          <img
+            className="h-16 me-4 transition-transform duration-300 hover:scale-125"
+            src="./FinalLogo.png"
+            alt="Book Logo"
+          />
           <h1 className="text-2xl font-semibold">Quasar Books</h1>
         </Link>
         <div className="nav-links-qbooks hidden md:flex items-center gap-4">
