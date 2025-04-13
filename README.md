@@ -1,6 +1,10 @@
 # Quasar Books (QBooks) 📚
 
-Welcome to **Quasar Books** — a unique online library experience where users can explore, read, and purchase books from an extensive, hand-picked collection that inspires, captivates, and enlightens. Built with a sleek, modern UI, QBooks emphasizes readability, elegance, and ease of use.
+Welcome to **Quasar Books** — You can sign up, log in, and browse books by genre, author, or popularity. When you find something you like, just add it to your cart and place the order. You’ll get a confirmation, and you can always check your order history later.
+
+There’s also an admin panel where books can be added or updated, inventory is managed, and orders are tracked in real time.
+
+It's a unique online library experience where users can explore, read, and purchase books from an extensive, hand-picked collection that inspires, captivates, and enlightens. Built with a sleek, modern UI, QBooks emphasizes readability, elegance, and ease of use.
 
 ---
 
