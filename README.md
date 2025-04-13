@@ -67,12 +67,12 @@ npm install
 npm run dev
 ```
 ### Backend Setup
-Set up the Express.js server
-
-Configure MongoDB database
-
-Ensure routes for authentication, book handling, cart, orders, and favorites are implemented
-
+-Set up the Express.js server
+-Configure MongoDB database
+-Ensure routes for authentication, book handling, cart, orders, and favorites are implemented
+```bash
+nodemon app.js
+```
 Refer to the conn folder or API Documentation
 
 ## Tech Stack
