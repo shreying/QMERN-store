@@ -132,9 +132,10 @@ const ViewBookDetails = () => {
 
       {data && (
         <div className="px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start">
-          {/* Image & Action Buttons */}
-          <div className="w-full md:w-1/3 flex flex-col items-center gap-6">
-            <div className="bg-zinc-800 p-6 rounded-xl shadow-md w-full flex justify-center">
+          {/* Image & Action Buttons in the Same Box */}
+          <div className="bg-zinc-800 p-6 rounded-xl shadow-md w-full md:w-1/3 flex flex-row items-start gap-6">
+            {/* Book Image */}
+            <div className="flex-1 flex justify-center">
               <img
                 src={data.url}
                 alt={data.title}
@@ -142,43 +143,42 @@ const ViewBookDetails = () => {
               />
             </div>
 
-            {isLoggedIn && role === "user" && (
-              <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-4 gap-4">
-                <button
-                  className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 text-red-500 flex items-center gap-3"
-                  onClick={handleFavourite}
-                >
-                  <FaHeart />
-                  <span className="ms-4 block lg:hidden">Favourites</span>
-                </button>
-                <button
-                  className="bg-white text-blue-500 rounded mt-8 md:mt-0 lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center gap-3"
-                  onClick={handleCart}
-                >
-                  <FaShoppingCart />
-                  <span className="ms-4 block lg:hidden">Add to Cart</span>
-                </button>
-              </div>
-            )}
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-4 items-center justify-start">
+              {isLoggedIn && role === "user" && (
+                <>
+                  <button
+                    className="bg-white rounded-full text-3xl p-3 text-red-500 flex items-center justify-center shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-110"
+                    onClick={handleFavourite}
+                  >
+                    <FaHeart />
+                  </button>
+                  <button
+                    className="bg-white rounded-full text-3xl p-3 text-blue-500 flex items-center justify-center shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-110"
+                    onClick={handleCart}
+                  >
+                    <FaShoppingCart />
+                  </button>
+                </>
+              )}
 
-            {isLoggedIn && role === "admin" && (
-              <div className="flex flex-col md:flex-row lg:flex-col items-center justify-between lg:justify-start mt-8">
-                <Link
-                  to={`/update-book/${id}`}
-                  className="bg-white rounded lg:rounded-full text-4xl lg:text-3xl p-3 flex items-center justify-center"
-                >
-                  <FaEdit />
-                  <span className="ms-4 block lg:hidden">Edit</span>
-                </Link>
-                <button
-                  className="text-red-500 rounded lg:rounded-full text-4xl lg:text-3xl p-3 mt-8 md:mt-0 lg:mt-8 flex items-center justify-center"
-                  onClick={() => setShowDeletePopup(true)} // Show delete confirmation popup
-                >
-                  <MdOutlineDelete />
-                  <span className="ms-4 block lg:hidden">Delete Book</span>
-                </button>
-              </div>
-            )}
+              {isLoggedIn && role === "admin" && (
+                <>
+                  <Link
+                    to={`/update-book/${id}`}
+                    className="bg-white rounded-full text-3xl p-3 text-green-500 flex items-center justify-center shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-110"
+                  >
+                    <FaEdit />
+                  </Link>
+                  <button
+                    className="bg-white rounded-full text-3xl p-3 text-red-500 flex items-center justify-center shadow-md hover:shadow-lg transition-transform duration-300 hover:scale-110"
+                    onClick={() => setShowDeletePopup(true)}
+                  >
+                    <MdOutlineDelete />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Book Details */}

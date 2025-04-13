@@ -111,7 +111,7 @@ const Cart = () => {
             Your Cart is Empty
           </h1>
           <img
-            src="/empty-cart.png"
+            src="/shopping.png" // Updated image path
             alt="empty cart"
             className="lg:h-[50vh] h-[30vh] object-contain"
           />
