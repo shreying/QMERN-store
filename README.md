@@ -6,6 +6,8 @@ There’s also an admin panel where books can be added or updated, inventory is 
 
 It's a unique online library experience where users can explore, read, and purchase books from an extensive, hand-picked collection that inspires, captivates, and enlightens. Built with a sleek, modern UI, QBooks emphasizes readability, elegance, and ease of use.
 
+Demonstration : https://youtu.be/xwyU-W6vXoE?feature=shared
+
 ---
 
 ## 📑 Table of Contents
