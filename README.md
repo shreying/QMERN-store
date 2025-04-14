@@ -30,6 +30,11 @@ It's a unique online library experience where users can explore, read, and purch
 
 The app's front-end prioritizes user experience through dynamic visuals and intuitive navigation.
 
+Home Page
+![Alt text](/Output-screenshots/ss1.png?raw=true "home page")
+![Alt text](/Output-screenshots/ss2.png?raw=true "home page")
+
+
 ---
 
 ## 🚀 Features
